@@ -12,7 +12,7 @@ class Employee extends Model
         'nomor_telepon',
         'tanggal_lahir',
         'alamat',
-        'tanggal_mcdasuk',
+        'tanggal_masuk',
         'status',
     ];
 }
