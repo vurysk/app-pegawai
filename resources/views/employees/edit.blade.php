@@ -8,7 +8,8 @@
     <title>Update Pegawai</title>
     <style>
         body {
-        background-color: #fcfce6; /* warna biru muda */
+            background-color: #fcfce6;
+            /* warna biru muda */
         }
     </style>
 </head>
@@ -20,7 +21,7 @@
         @method('PUT')
         <table>
             <tr>
-                <td>Nama Lengkap</td>
+                <td>Full Name</td>
                 <td><input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $employee->nama_lengkap) }}">
                 </td>
             </tr>
@@ -29,21 +30,21 @@
                 <td><input type="email" name="email" value="{{ old('email', $employee->email) }}"></td>
             </tr>
             <tr>
-                <td>Nomor Telepon</td>
+                <td>Phone Number</td>
                 <td><input type="text" name="nomor_telepon"
                         value="{{ old('nomor_telepon', $employee->nomor_telepon) }}"></td>
             </tr>
             <tr>
-                <td>Tanggal Lahir</td>
+                <td>Birthday</td>
                 <td><input type="date" name="tanggal_lahir"
                         value="{{ old('tanggal_lahir', $employee->tanggal_lahir) }}"></td>
             </tr>
             <tr>
-                <td>Alamat</td>
+                <td>Address</td>
                 <td><input type="text" name="alamat" value="{{ old('alamat', $employee->alamat) }}"></td>
             </tr>
             <tr>
-                <td>Tanggal Masuk</td>
+                <td>Entry Date</td>
                 <td><input type="date" name="tanggal_masuk"
                         value="{{ old('tanggal_masuk', $employee->tanggal_masuk) }}"></td>
             </tr>
@@ -51,16 +52,43 @@
                 <td>Status</td>
                 <td>
                     <select name="status">
-                        <option value="aktif" {{ old('status', $employee->status) == 'aktif' ? 'selected' : '' }}>Aktif
+                        <option value="aktif" {{ old('status', $employee->status) == 'aktif' ? 'selected' : '' }}>
+                            Active
                         </option>
                         <option value="tidak aktif"
-                            {{ old('status', $employee->status) == 'tidak aktif' ? 'selected' : '' }}>Tidak
-
-                            Aktif</option>
-
+                            {{ old('status', $employee->status) == 'tidak aktif' ? 'selected' : '' }}>Nonactive</option>
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td>Departemen</td>
+                <td>
+                    <select name="departemen_id">
+                        @foreach ($departments as $dept)
+                            <option value="{{ $dept->id }}"
+                                {{ old('departemen_id', $employee->departemen_id ?? '') == $dept->id ? 'selected' : '' }}>
+                                {{ $dept->nama_departemen }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Jabatan</td>
+                <td>
+                    <select name="jabatan_id">
+                        @foreach ($positions as $pos)
+                            <option value="{{ $pos->id }}"
+                                {{ old('jabatan_id', $employee->jabatan_id ?? '') == $pos->id ? 'selected' : '' }}>
+                                {{ $pos->nama_jabatan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+
+
             <tr>
                 <td colspan="2">
                     <button type="submit">Update</button>

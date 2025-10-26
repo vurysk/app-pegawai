@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Daftar Pegawai</title>
-    <style>
-        body {
-        background-color: #fcfce6; /* warna biru muda */
-        }
-    </style>
-</head>
-
-<body>
-    @extends('master')
-    @section('title', 'Daftar Pegawai')
-    @section('content')
+@extends('master')
+@section('title', 'Daftar Pegawai')
+@section('content')
     <div class="container mt-5">
         <h1 class="mb-4">Daftar Pegawai</h1>
         <table border="1" cellpadding="5" cellspacing="0">
+            <a href="{{ route('employees.create') }}" style="display:inline-block; margin-bottom:15px;">
+                ➕
+            </a>
             <thead>
                 <tr>
                     <th>Nama Lengkap</th>
@@ -43,14 +30,14 @@
                         <td>{{ $employee->tanggal_masuk }}</td>
                         <td>{{ $employee->status }}</td>
                         <td>
-                            <a href="{{ route('employees.show', $employee->id) }}">Detail</a> |
-                            <a href="{{ route('employees.edit', $employee->id) }}">Edit</a> |
+                            <a href="{{ route('employees.show', $employee->id) }}">📁</a> 
+                            <a href="{{ route('employees.edit', $employee->id) }}">✏️</a> 
                             <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                    onclick="return confirm('Yakin ingin menghapus?')">🗑️</button>
                             </form>
                         </td>
                     </tr>
@@ -58,7 +45,4 @@
             </tbody>
         </table>
     </div>
-    @endsection
-</body>
-
-</html>
+@endsection
