@@ -1,4 +1,57 @@
-@extends('master')
+<x-layout pageTitle="Salaries">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">Employee Salary List</h2>
+            <a href="{{ route('salaries.create') }}"
+                class="text-sm text-blue-600 hover:underline">➕ Add Salary</a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-300 text-sm">
+                <thead class="bg-gray-100 text-left text-gray-700 font-semibold">
+                    <tr>
+                        <th class="px-6 py-3">Employee Name</th>
+                        <th class="px-6 py-3">Month</th>
+                        <th class="px-6 py-3">Base Salary</th>
+                        <th class="px-6 py-3">Allowance</th>
+                        <th class="px-6 py-3">Deductions</th>
+                        <th class="px-6 py-3">Total Salary</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 text-gray-600">
+                    @foreach ($salaries as $salary)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $salary->employee->nama_lengkap ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $salary->bulan }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">$ {{ number_format($salary->gaji_pokok, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">$ {{ number_format($salary->tunjangan, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">$ {{ number_format($salary->potongan, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">$ {{ number_format($salary->total_gaji, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                <a href="{{ route('salaries.show', $salary->id) }}"
+                                    class="text-blue-600 hover:underline">👁️</a>
+                                <a href="{{ route('salaries.edit', $salary->id) }}"
+                                    class="text-yellow-600 hover:underline">✒️</a>
+                                <form action="{{ route('salaries.destroy', $salary->id) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        onclick="return confirm('Are you sure you want to delete this?')"
+                                        class="text-red-600 hover:underline">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</x-layout>
+
+
+{{-- @extends('master')
 @section('title', 'Salary List')
 @section('content')
     <div class="container mt-5">
@@ -45,4 +98,4 @@
             </tbody>
         </table>
     </div>
-@endsection
+@endsection --}}
