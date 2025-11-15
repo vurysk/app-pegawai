@@ -26,9 +26,7 @@ class SalariesController extends Controller
         return view('salaries.create', compact('employees'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -51,28 +49,24 @@ class SalariesController extends Controller
      */
     public function show(string $id)
     {
-        $salaries = Salaries::find($id);
+        $salary = Salaries::find($id);
 
-        if (!$salaries) {
+        if (!$salary) {
             abort(404, 'Data gaji tidak ditemukan');
         }
 
-        return view('salaries.show', compact('salaries'));
+        return view('salaries.show', compact('salary'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
-        $salaries = Salaries::find($id);
+        $salary = Salaries::find($id);
         $employees = Employee::all();
-        return view('salaries.edit', compact('salaries', 'employees'));
+        return view('salaries.edit', compact('salary', 'employees'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
         $request->validate([

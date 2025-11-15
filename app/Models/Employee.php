@@ -16,6 +16,7 @@ class Employee extends Model
         'status',
         'departemen_id',
         'jabatan_id',
+        'room_id',
 
     ];
 
@@ -28,5 +29,9 @@ class Employee extends Model
     public function position()
     {
         return $this->belongsTo(Position::class, 'jabatan_id');
+    }
+
+    public function room(){
+        return $this->belongsTo(Room::class, 'room_id');
     }
 }

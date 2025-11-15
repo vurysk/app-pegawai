@@ -1,0 +1,13 @@
+@props(['columns'])
+
+<tr>
+    @foreach($columns as $column)
+        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-300 uppercase tracking-wider border-r border-gray-600 last:border-r-0">
+            <div class="flex items-center space-x-2">
+                <div class="w-1.5 h-1.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full"></div>
+                <span>{{ $column }}</span>
+            </div>
+        </th>
+    @endforeach
+</tr>
+

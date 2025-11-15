@@ -12,9 +12,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        // $departments = Department::latest()->paginate(5);
-        // return view('departments.index', compact('departments'));
-        $departments = Department::orderBy('id', 'asc')->paginate(5);
+        $departments = Department::orderBy('id', 'asc')->paginate(10);
         return view('departments.index', compact('departments'));
     }
 
@@ -26,9 +24,7 @@ class DepartmentController extends Controller
         return view('departments.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -60,9 +56,7 @@ class DepartmentController extends Controller
         return view('departments.edit', compact('departments'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
         $request->validate([

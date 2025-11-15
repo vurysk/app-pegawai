@@ -1,4 +1,36 @@
 <x-layout pageTitle="Salaries">
+    <x-table.container title="Employee Salary List" addRoute="{{ route('salaries.create') }}" addText="Add Salary">
+        <x-slot name="header">
+            <x-table.header :columns="['Employee Name', 'Month', 'Base Salary', 'Allowance', 'Deductions', 'Total Salary', 'Actions']" />
+        </x-slot>
+
+        <x-slot name="body">
+            @foreach ($salaries as $salary)
+                <tr class="hover:bg-gray-700/50 transition duration-200 border-b border-gray-700/30">
+                    <td class="px-6 py-3 whitespace-nowrap text-gray-100">{{ $salary->employee->nama_lengkap ?? '-' }}
+                    </td>
+                    <td class="px-6 py-3 whitespace-nowrap text-gray-300">{{ $salary->bulan }}</td>
+                    <td class="px-6 py-3 whitespace-nowrap text-gray-300">$
+                        {{ number_format($salary->gaji_pokok, 0, ',', '.') }}</td>
+                    <td class="px-6 py-3 whitespace-nowrap text-green-400">$
+                        {{ number_format($salary->tunjangan, 0, ',', '.') }}</td>
+                    <td class="px-6 py-3 whitespace-nowrap text-red-400">$
+                        {{ number_format($salary->potongan, 0, ',', '.') }}</td>
+                    <td
+                        class="px-6 py-3 whitespace-nowrap font-semibold text-white bg-gradient-to-r from-purple-500/10 to-purple-600/10 border-l-2 border-purple-500">
+                        $ {{ number_format($salary->total_gaji, 0, ',', '.') }}
+                    </td>
+                    <x-table.actions showRoute="salaries.show" editRoute="salaries.edit" destroyRoute="salaries.destroy"
+                        :id="$salary->id" />
+                </tr>
+            @endforeach
+        </x-slot>
+    </x-table.container>
+</x-layout>
+
+
+
+{{-- <x-layout pageTitle="Salaries">
     <div class="bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold text-gray-800">Employee Salary List</h2>
@@ -38,7 +70,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this?')"
+                                        onclick="return confirm('Are you sure you want to delete this salary?')"
                                         class="text-red-600 hover:underline">🗑️</button>
                                 </form>
                             </td>
@@ -48,7 +80,7 @@
             </table>
         </div>
     </div>
-</x-layout>
+</x-layout> --}}
 
 
 {{-- @extends('master')

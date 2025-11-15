@@ -12,7 +12,7 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::orderBy('id', 'asc')->paginate(5);
+        $positions = Position::orderBy('id', 'asc')->paginate(10);
         return view('positions.index', compact('positions'));
     }
 
@@ -23,10 +23,6 @@ class PositionController extends Controller
     {
         return view('positions.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -56,9 +52,7 @@ class PositionController extends Controller
         return view('positions.edit', compact('positions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
         $request->validate([
