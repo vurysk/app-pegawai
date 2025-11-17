@@ -32,6 +32,9 @@
             @endforeach
         </x-slot>
     </x-table.container>
+    <div class="mt-6">
+        {{ $employees->links() }}
+    </div>
 </x-layout>
 
 

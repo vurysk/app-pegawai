@@ -15,4 +15,5 @@ class Position extends Model
     {
         return $this->hasMany(Employee::class, 'jabatan_id');
     }
+    
 }

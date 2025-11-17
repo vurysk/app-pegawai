@@ -12,7 +12,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::orderBy('id', 'asc')->paginate(10);
+        $departments = Department::orderBy('id', 'asc')->paginate(5);
         return view('departments.index', compact('departments'));
     }
 
