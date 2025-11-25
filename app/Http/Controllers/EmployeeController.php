@@ -11,12 +11,27 @@ use Illuminate\Http\Request;
 class EmployeeController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with(['department', 'position', 'room'])->latest()->paginate(5);
+        $employees = Employee::with(['department', 'position', 'room'])
+
+            ->when($request->search, function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('nama_lengkap', 'like', '%' . $request->search . '%')
+                        ->orWhere('email', 'like', '%' . $request->search . '%')
+                        ->orWhere('nomor_telepon', 'like', '%' . $request->search . '%');
+                });
+            })
+
+            ->when($request->status, function ($query) use ($request) {
+                $query->where('status', $request->status);
+            })
+            ->latest()
+            ->paginate(5)
+            ->withQueryString();
+
+
         return view('employees.index', compact('employees'));
-        // $employees = Employee::latest()->paginate(5);
-        // return view('employees.index', compact('employees'));
     }
 
 
@@ -57,9 +72,8 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         $employee = Employee::with(['department', 'position', 'room'])->find($id);
+        
         return view('employees.show', compact('employee'));
-        // $employee = Employee::find($id);
-        // return view('employees.show', compact('employee'));
     }
 
 

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Hapus kolom lama
+    
         Schema::table('attendance', function (Blueprint $table) {
             $table->dropColumn('status_absensi');
         });
 
-        // Tambah ulang kolom dengan enum baru
+       
         Schema::table('attendance', function (Blueprint $table) {
             $table->enum('status_absensi', ['present', 'leave', 'sick', 'absent'])->after('waktu_keluar');
         });
@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Balik ke enum lama (Bahasa Indonesia)
+        
         Schema::table('attendance', function (Blueprint $table) {
             $table->dropColumn('status_absensi');
         });

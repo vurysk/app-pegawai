@@ -60,7 +60,7 @@
                 </h1>
 
                 <h2 class="text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent sm:text-7xl glow-text mb-8">
-                    HR Elite System
+                   Employee System
                 </h2>
 
                 <p class="text-xl text-gray-400 sm:text-2xl max-w-2xl mx-auto leading-relaxed mb-12">

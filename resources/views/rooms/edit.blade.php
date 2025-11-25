@@ -1,6 +1,6 @@
 <x-layout pageTitle="Edit Room">
     <div class="max-w-2xl mx-auto">
-        <!-- Compact Header -->
+
         <div class="mb-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <!-- Compact Form Section -->
+
         <form action="{{ route('rooms.update', $rooms->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -44,7 +44,6 @@
                 </div>
             </div>
 
-            <!-- Compact Action Buttons -->
             <div class="flex items-center justify-end space-x-3">
                 <a href="{{ route('rooms.index') }}" 
                    class="px-4 py-2 text-xs font-medium text-gray-300 bg-gray-700/50 border border-gray-600/50 rounded-lg hover:bg-gray-600/50 hover:text-white transition-all duration-300">

@@ -10,9 +10,16 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::orderBy('id', 'asc')->paginate(5);
+        $departments = Department::orderBy('id', 'asc')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('nama_departemen', 'like', '%' . $request->search . '%');
+            })
+            ->paginate(5)
+            ->withQueryString();
+
+
         return view('departments.index', compact('departments'));
     }
 
@@ -56,7 +63,7 @@ class DepartmentController extends Controller
         return view('departments.edit', compact('departments'));
     }
 
-    
+
     public function update(Request $request, string $id)
     {
         $request->validate([

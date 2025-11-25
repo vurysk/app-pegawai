@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <!-- Compact Form Section -->
+
         <form action="{{ route('employees.update', $employee->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -25,22 +25,22 @@
                         <x-form.input name="email" label="Email" type="email"
                             value="{{ old('email', $employee->email) }}" />
 
-                        <!-- Row 2 -->
+
                         <x-form.input name="nomor_telepon" label="Phone Number"
                             value="{{ old('nomor_telepon', $employee->nomor_telepon) }}" />
 
                         <x-form.input name="tanggal_lahir" label="Birthday" type="date"
                             value="{{ old('tanggal_lahir', $employee->tanggal_lahir) }}" />
 
-                        <!-- Row 3 - Address (Full Width) -->
+
                         <x-form.textarea name="alamat" label="Address" 
                             value="{{ old('alamat', $employee->alamat) }}"  />
 
-                        <!-- Row 4 -->
+
                         <x-form.input name="tanggal_masuk" label="Entry Date" type="date"
                             value="{{ old('tanggal_masuk', $employee->tanggal_masuk) }}" />
 
-                        <!-- Status -->
+
                         <div class="group">
                             <label for="status" class="block text-xs font-medium text-gray-300 mb-2 flex items-center space-x-2">
                                 <div class="w-1.5 h-1.5 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"></div>
@@ -59,24 +59,21 @@
                             @enderror
                         </div>
 
-                        <!-- Row 5 -->
+
                         <x-form.select name="departemen_id" label="Department" :options="$departments"
                             selected="{{ old('departemen_id', $employee->departemen_id) }}" optionLabel="nama_departemen" />
 
                         <x-form.select name="jabatan_id" label="Position" :options="$positions"
                             selected="{{ old('jabatan_id', $employee->jabatan_id) }}" optionLabel="nama_jabatan" />
 
-                        <!-- Row 6 -->
                         <x-form.select name="room_id" label="Room" :options="$rooms"
                             selected="{{ old('room_id', $employee->room_id) }}" optionLabel="room_code" />
-
-                        <!-- Empty cell untuk balance -->
                         <div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Compact Action Buttons -->
+
             <div class="flex items-center justify-end space-x-3 pt-4">
                 <a href="{{ route('employees.index') }}" 
                    class="px-4 py-2 text-xs font-medium text-gray-300 bg-gray-700/50 border border-gray-600/50 rounded-lg hover:bg-gray-600/50 hover:text-white transition-all duration-300">

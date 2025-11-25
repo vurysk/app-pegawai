@@ -9,134 +9,61 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    public function index(Request $request)
+    {
+        // 1. Tentukan Tanggal & Mode View
+        $selectedDate = $request->selected_date ?? Carbon::today()->format('Y-m-d');
+        $viewAll = $request->view_all == '1';
 
-    
+        // 2. Query Dasar Attendance
+        $query = Attendance::with('employee')->latest();
 
-
-public function index(Request $request)
-{
-    try {
-        // Ambil parameter filter
-        $selectedDate = $request->get('selected_date', Carbon::today()->format('Y-m-d'));
-        $viewAll = $request->get('view_all', false);
-
-        // Query data attendance dengan sorting yang benar
-        $attendances = Attendance::with('employee')
-            ->when(!$viewAll, function ($query) use ($selectedDate) {
-                return $query->whereDate('tanggal', $selectedDate);
-            })
-            ->orderBy('tanggal', 'desc') // Urutkan dari tanggal terbaru
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
-
-        // Hitung statistics
-        $totalEmployees = Employee::where('status', 'aktif')->count();
-
-        // Base query untuk statistics
-        $statsQuery = Attendance::query();
+        // Jika TIDAK view all, filter berdasarkan tanggal
         if (!$viewAll) {
-            $statsQuery->whereDate('tanggal', $selectedDate);
+            $query->whereDate('tanggal', $selectedDate);
         }
 
-        // Hitung jumlah per status
-        $presentCount = (clone $statsQuery)->where('status', 'present')->count();
-        $sickCount = (clone $statsQuery)->where('status', 'sick')->count();
-        $leaveCount = (clone $statsQuery)->where('status', 'leave')->count();
-        $lateCount = (clone $statsQuery)->where('status', 'late')->count();
-        $absentCount = (clone $statsQuery)->where('status', 'absent')->count();
+        // Eksekusi Pagination
+        $attendances = $query->paginate(10)->withQueryString();
 
-        // Siapkan data untuk view
-        $viewData = [
-            'attendances' => $attendances,
-            'selectedDate' => $selectedDate,
-            'viewAll' => $viewAll,
-            'displayDate' => $viewAll ? null : Carbon::parse($selectedDate)->format('l, F j, Y'),
-            'stats' => [
-                'total' => $totalEmployees,
-                'present' => $presentCount,
-                'sick' => $sickCount,
-                'leave' => $leaveCount,
-                'late' => $lateCount,
-                'absent' => $absentCount,
-            ],
-            'statusConfig' => [
-                'present' => [
-                    'label' => 'Present',
-                    'color' => 'bg-green-500/20 text-green-300 border border-green-500/30',
-                    'dot_color' => 'bg-green-400'
-                ],
-                'late' => [
-                    'label' => 'Late', 
-                    'color' => 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
-                    'dot_color' => 'bg-yellow-400'
-                ],
-                'sick' => [
-                    'label' => 'Sick',
-                    'color' => 'bg-blue-500/20 text-blue-300 border border-blue-500/30', 
-                    'dot_color' => 'bg-blue-400'
-                ],
-                'leave' => [
-                    'label' => 'Leave',
-                    'color' => 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
-                    'dot_color' => 'bg-purple-400'
-                ],
-                'absent' => [
-                    'label' => 'Absent',
-                    'color' => 'bg-red-500/20 text-red-300 border border-red-500/30',
-                    'dot_color' => 'bg-red-400'
-                ]
-            ]
+        // ---------------------------------------------------------
+        // LOGIC STATS CARD & SLICING (/ TOTAL KARYAWAN)
+        // ---------------------------------------------------------
+
+        // A. Ambil Total Karyawan Aktif (Penyebut)
+        $totalEmployees = Employee::where('status', 'aktif')->count();
+
+        // B. Hitung Statistik pada Tanggal Terpilih (Pembilang)
+        // Kita hitung berdasarkan $selectedDate agar informasinya relevan dengan hari itu
+        $statsQuery = Attendance::whereDate('tanggal', $selectedDate);
+
+        $stats = [
+            'total'   => $totalEmployees, // Total populasi karyawan
+            // Hitung berapa data attendance yang sudah masuk hari ini
+            'recorded_count' => $statsQuery->count()
         ];
 
-        return view('attendances.index', $viewData);
+        // ---------------------------------------------------------
+        // DISPLAY MESSAGE LOGIC
+        // ---------------------------------------------------------
+        $displayDate = Carbon::parse($selectedDate)->format('d F Y');
 
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        // Cek selisih data (Misal: Total Karyawan 10, Data Masuk 8 -> Berarti 2 orang belum absen)
+        $missingCount = $totalEmployees - $stats['recorded_count'];
+        $dataMessage = "";
+
+        if (!$viewAll) {
+            if ($missingCount > 0) {
+                $dataMessage = "Warning: {$missingCount} employees have no attendance record for {$displayDate}.";
+            } else {
+                $dataMessage = "All {$totalEmployees} employees have records for {$displayDate}.";
+            }
+        }
+
+        return view('attendances.index', compact('attendances', 'stats', 'selectedDate', 'viewAll', 'displayDate', 'dataMessage'));
     }
-}
-    // public function index(Request $request)
-    // {
-    //     // Ambil filter tanggal dari request, default hari ini
-    //     $selectedDate = $request->get('selected_date', Carbon::today()->format('Y-m-d'));
-    //     $viewAll = $request->has('view_all'); // Flag untuk lihat semua data
 
-    //     // Query attendance dengan filter
-    //     $attendances = Attendance::with('employee')
-    //         ->when(!$viewAll, function ($query) use ($selectedDate) {
-    //             return $query->whereDate('tanggal', $selectedDate);
-    //         })
-    //         ->latest()
-    //         ->paginate(10);
-
-    //     // Statistics - sesuaikan dengan filter
-    //     $totalEmployees = Employee::where('status', 'aktif')->count();
-
-    //     $baseQuery = Attendance::query();
-    //     if (!$viewAll) {
-    //         $baseQuery->whereDate('tanggal', $selectedDate);
-    //     }
-
-    //     // Statistics untuk hari ini
-    //     $presentCount = (clone $baseQuery)->where('status', 'present')->count();
-    //     $sickCount = (clone $baseQuery)->where('status', 'sick')->count();
-    //     $leaveCount = (clone $baseQuery)->where('status', 'leave')->count();
-    //     $lateCount = (clone $baseQuery)->where('status', 'late')->count();
-    //     $absentCount = (clone $baseQuery)->where('status', 'absent')->count();
-
-    //     $stats = [
-    //         'total' => $totalEmployees,
-    //         'present' => $presentCount,
-    //         'sick' => $sickCount,
-    //         'leave' => $leaveCount,
-    //         'late' => $lateCount,
-    //         'absent' => $absentCount,
-    //         'selected_date' => $selectedDate,
-    //         'view_all' => $viewAll
-    //     ];
-
-    //     return view('attendances.index', compact('attendances', 'stats'));
-    // }
-
+    
 
     public function create()
     {

@@ -11,9 +11,22 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request )
     {
-        $rooms = Room::orderBy('id', 'asc')->paginate(5);
+        $rooms = Room::with('department')
+            ->orderBy('id', 'asc')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('room_code', 'like', '%' . $request->search . '%');
+            })
+            
+            
+            ->when($request->floor, function ($query) use ($request) {
+                $query->where('floor', $request->floor);
+            })
+            ->paginate(5)
+            ->withQueryString();
+
+
         return view('rooms.index', compact('rooms'));
     }
 
